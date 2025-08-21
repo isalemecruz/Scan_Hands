@@ -30,7 +30,7 @@ jobs:
       - name: Teste de login
         run: |
           echo "Testando login no site..."
-          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X POST https://magenta-jay-944565.hostingersite.com/
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X POST "https://magenta-jay-944565.hostingersite.com/" \
             -d "email=aluno@gmail.com&senha=12345")
           echo "Código HTTP retornado: $RESPONSE"
           if [ "$RESPONSE" -eq 200 ]; then
@@ -39,3 +39,4 @@ jobs:
             echo "Falha no login!"
             exit 1
           fi
+      
