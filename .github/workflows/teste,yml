@@ -1,0 +1,18 @@
+name: Teste PHP
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-php:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar código
+        uses: actions/checkout@v4
+
+      - name: Instalar PHP
+        run: sudo apt-get install -y php-cli
+
+      - name: Rodar script PHP
+        run: php -r "echo 'GitHub Actions rodou PHP com sucesso 🚀';"
