@@ -1,6 +1,9 @@
-name: Teste PHP
+name: Teste PHP e Login
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -16,3 +19,23 @@ jobs:
 
       - name: Rodar script PHP
         run: php -r "echo 'GitHub Actions rodou PHP com sucesso 🚀';"
+
+  login-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      - name: Teste de login
+        run: |
+          echo "Testando login no site..."
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X POST https://magenta-jay-944565.hostingersite.com/
+            -d "email=aluno@gmail.com&senha=12345")
+          echo "Código HTTP retornado: $RESPONSE"
+          if [ "$RESPONSE" -eq 200 ]; then
+            echo "Login OK!"
+          else
+            echo "Falha no login!"
+            exit 1
+          fi
