@@ -1,4 +1,4 @@
-name: Teste PHP e Login
+name: Teste PHP, Login e Banco
 
 on:
   push:
@@ -9,7 +9,6 @@ on:
 jobs:
   run-php:
     runs-on: ubuntu-latest
-
     steps:
       - name: Baixar código
         uses: actions/checkout@v4
@@ -22,7 +21,6 @@ jobs:
 
   login-test:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout do código
         uses: actions/checkout@v3
@@ -39,4 +37,18 @@ jobs:
             echo "Falha no login!"
             exit 1
           fi
-      
+
+  db-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Instalar MySQL client
+        run: sudo apt-get install -y mysql-client
+
+      - name: Testar logins dos alunos
+        run: |
+          echo "Conectando ao banco e listando usuários do tipo aluno..."
+          mysql -h 127.0.0.1 -P 3306 -u u357936358_librinha -p"Librinh4tcc#" u357936358_scanhands -e "
+            SELECT id_usuario, email, senha, tipo 
+            FROM usuario 
+            WHERE tipo = 'aluno';
+          "
