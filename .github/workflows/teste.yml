@@ -59,7 +59,7 @@ jobs:
             senha=$(echo "$linha" | awk '{print $2}')
             echo "Testando login do aluno: $email"
 
-            resposta=$(curl -s -o /dev/null -w "%{http_code}" -d "email=$email&senha=$senha&tipo=aluno" https://seusite.com.br/login)
+            resposta=$(curl -s -o /dev/null -w "%{magenta-jay-944565.hostingersite.com}" -d "email=$email&senha=$senha&tipo=aluno" https://seusite.com.br/login)
 
             if [ "$resposta" -eq 200 ]; then
               echo "✅ Login OK para $email"
