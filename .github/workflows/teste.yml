@@ -43,11 +43,10 @@ jobs:
       - name: Instalar PHP
         run: sudo apt-get install -y php-cli php-curl php-mbstring
 
-      - name: Testar logins de todos os alunos
-        env:
-          DB_PASS: 'Librinh4tcc#'
+      - name: Criar script de teste de login
         run: |
-          php -r '
+          cat << 'EOF' > login_test.php
+          <?php
           $host = "srv720.hstgr.io";
           $db = "u357936358_scanhands";
           $user = "u357936358_librinha";
@@ -58,7 +57,7 @@ jobs:
               die("Erro no banco: " . $conn->connect_error);
           }
 
-          $result = $conn->query("SELECT email, senha FROM usuario WHERE tipo=\'aluno\'");
+          $result = $conn->query("SELECT email, senha FROM usuario WHERE tipo='aluno'");
           if (!$result) {
               die("Erro na query: " . $conn->error);
           }
@@ -78,18 +77,22 @@ jobs:
               ]));
               curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
               curl_setopt($ch, CURLOPT_HEADER, true);
-              curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false); // a gente verifica o Location manualmente
+              curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
 
               $response = curl_exec($ch);
-              $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
               curl_close($ch);
 
-              // Procura se tem redirecionamento para inicioAluno.php
               if (preg_match("/Location: .*inicioAluno\\.php/i", $response)) {
                   echo "✅ Login OK para $email\n";
               } else {
                   echo "❌ Falha no login de $email\n";
               }
           }
+
           $conn->close();
-          '
+          EOF
+
+      - name: Rodar script de login
+        env:
+          DB_PASS: 'Librinh4tcc#'
+        run: php login_test.php
