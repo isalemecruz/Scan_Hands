@@ -19,24 +19,6 @@ jobs:
       - name: Rodar script PHP
         run: php -r "echo 'GitHub Actions rodou PHP com sucesso 🚀';"
 
-  login-test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout do código
-        uses: actions/checkout@v3
-
-      - name: Teste de login
-        run: |
-          echo "Testando login no site..."
-          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X POST "https://magenta-jay-944565.hostingersite.com/" \
-            -d "email=aluno@gmail.com&senha=12345")
-          echo "Código HTTP retornado: $RESPONSE"
-          if [ "$RESPONSE" -eq 200 ]; then
-            echo "Login OK!"
-          else
-            echo "Falha no login!"
-            exit 1
-          fi
 
   db-test:
     runs-on: ubuntu-latest
@@ -52,3 +34,32 @@ jobs:
             FROM usuario 
             WHERE tipo = 'aluno';
           "
+          
+  login-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      - name: Teste de login real
+        run: |
+          echo "🔑 Testando login no site com usuário aluno..."
+          RESPONSE=$(curl -s -L -c cookies.txt -b cookies.txt -X POST "https://magenta-jay-944565.hostingersite.com/login.php" \
+            -d "email=aluno@gmail.com&senha=12345&tipo=aluno")
+
+          echo "📄 Página retornada:"
+          echo "$RESPONSE" | head -n 50   # mostra só as 50 primeiras linhas do HTML
+
+          if echo "$RESPONSE" | grep -q "inicioAluno.php"; then
+            echo "✅ Login realizado com sucesso e redirecionou para aluno!"
+          elif echo "$RESPONSE" | grep -q "Senha ou tipo de usuário incorretos"; then
+            echo "❌ Senha ou tipo incorreto!"
+            exit 1
+          elif echo "$RESPONSE" | grep -q "Usuário não encontrado"; then
+            echo "❌ Usuário não encontrado!"
+            exit 1
+          else
+            echo "⚠️ Login retornou algo inesperado."
+            exit 1
+          fi
