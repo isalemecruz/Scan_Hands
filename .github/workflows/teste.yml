@@ -42,12 +42,16 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Testar logins de todos os alunos
-        env:
-          DB_PASS: 'Librinh4tcc#'
         run: |
           echo "Pegando todos os alunos do banco..."
-          mapfile -t alunos < <(mysql -h srv720.hstgr.io -P 3306 -u u357936358_librinha -p"$DB_PASS" \
-            --batch --skip-column-names \
+
+          # Cria arquivo temporário com credenciais
+          echo "[client]" > ~/.my.cnf
+          echo "user=u357936358_librinha" >> ~/.my.cnf
+          echo "password='Librinh4tcc#'" >> ~/.my.cnf
+
+          # Captura os alunos
+          mapfile -t alunos < <(mysql -h srv720.hstgr.io -P 3306 --batch --skip-column-names \
             -e "SELECT email, senha FROM usuario WHERE tipo='aluno';" u357936358_scanhands)
 
           for linha in "${alunos[@]}"; do
@@ -63,8 +67,3 @@ jobs:
               echo "❌ Falha no login de $email"
             fi
           done
-
-
-
-
-
