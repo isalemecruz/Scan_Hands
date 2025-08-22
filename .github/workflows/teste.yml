@@ -43,7 +43,7 @@ jobs:
 
       - name: Testar logins de todos os alunos
         env:
-          DB_PASS: "Librinh4tcc#"
+          DB_PASS: 'Librinh4tcc#'
         run: |
           echo "Pegando todos os alunos do banco..."
           mapfile -t alunos < <(mysql -h srv720.hstgr.io -P 3306 -u u357936358_librinha -p"$DB_PASS" \
