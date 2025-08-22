@@ -46,9 +46,9 @@ jobs:
 
       - name: Testar logins dos alunos
         run: |
-          echo "Conectando ao banco e listando usuários do tipo aluno..."
-          mysql -h 127.0.0.1 -P 3306 -u u357936358_librinha -p"Librinh4tcc#" u357936358_scanhands -e "
-            SELECT id_usuario, email, senha, tipo 
+          echo "Conectando ao banco remoto e listando usuários do tipo aluno..."
+          mysql -h srv720.hstgr.io -P 3306 -u u357936358_librinha -p"Librinh4tcc#" u357936358_scanhands -e "
+            SELECT id_usuario, email, tipo 
             FROM usuario 
             WHERE tipo = 'aluno';
           "
