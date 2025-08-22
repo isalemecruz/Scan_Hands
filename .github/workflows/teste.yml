@@ -43,10 +43,11 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Testar logins de todos os alunos
+        env:
+          DB_PASS: "Librinh4tcc#"
         run: |
           echo "Pegando todos os alunos do banco..."
-          # Captura o resultado do MySQL em linhas, sem coluna de cabeçalho
-          mapfile -t alunos < <(mysql -h srv720.hstgr.io -P 3306 -u u357936358_librinha -p"Librinh4tcc#" \
+          mapfile -t alunos < <(mysql -h srv720.hstgr.io -P 3306 -u u357936358_librinha -p"$DB_PASS" \
             --batch --skip-column-names \
             -e "SELECT email, senha FROM usuario WHERE tipo='aluno';" u357936358_scanhands)
 
@@ -63,6 +64,7 @@ jobs:
               echo "❌ Falha no login de $email"
             fi
           done
+
 
 
 
