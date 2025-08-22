@@ -48,11 +48,8 @@ jobs:
           RESPONSE=$(curl -s -L -c cookies.txt -b cookies.txt -X POST "https://magenta-jay-944565.hostingersite.com/login.php" \
             -d "email=aluno@gmail.com&senha=12345&tipo=aluno")
 
-          echo "📄 Página retornada:"
-          echo "$RESPONSE" | head -n 50   # mostra só as 50 primeiras linhas do HTML
-
-          if echo "$RESPONSE" | grep -q "inicioAluno.php"; then
-            echo "✅ Login realizado com sucesso e redirecionou para aluno!"
+          if echo "$RESPONSE" | grep -q "Dashboard"; then
+            echo "✅ Login realizado com sucesso! O aluno foi redirecionado para o dashboard."
           elif echo "$RESPONSE" | grep -q "Senha ou tipo de usuário incorretos"; then
             echo "❌ Senha ou tipo incorreto!"
             exit 1
@@ -61,5 +58,7 @@ jobs:
             exit 1
           else
             echo "⚠️ Login retornou algo inesperado."
+            echo "Resposta parcial:"
+            echo "$RESPONSE" | head -n 30
             exit 1
           fi
