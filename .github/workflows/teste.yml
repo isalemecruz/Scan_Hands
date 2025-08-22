@@ -66,7 +66,7 @@ jobs:
               $email = $row["email"];
               $senha = $row["senha"];
               echo "Testando login do aluno: $email\n";
-              echo "...";
+              echo "\n";
 
               $ch = curl_init();
               curl_setopt($ch, CURLOPT_URL, "https://magenta-jay-944565.hostingersite.com/login.php");
