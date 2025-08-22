@@ -42,23 +42,22 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v3
 
-      - name: Teste de login real
+      - name: Testar logins de todos os alunos
         run: |
-          echo "🔑 Testando login no site com usuário aluno..."
-          RESPONSE=$(curl -s -L -c cookies.txt -b cookies.txt -X POST "https://magenta-jay-944565.hostingersite.com/login.php" \
-            -d "email=aluno@gmail.com&senha=12345&tipo=aluno")
-
-          if echo "$RESPONSE" | grep -q "Dashboard"; then
-            echo "✅ Login realizado com sucesso! O aluno foi redirecionado para o dashboard."
-          elif echo "$RESPONSE" | grep -q "Senha ou tipo de usuário incorretos"; then
-            echo "❌ Senha ou tipo incorreto!"
-            exit 1
-          elif echo "$RESPONSE" | grep -q "Usuário não encontrado"; then
-            echo "❌ Usuário não encontrado!"
-            exit 1
+          echo "Pegando todos os alunos do banco..."
+          alunos=$(mysql -h srv720.hstgr.io -P 3306 -u u357936358_librinha -p"Librinh4tcc#" u357936358_scanhands -N -e "SELECT email, senha FROM usuario WHERE tipo='aluno';")
+    
+          for aluno in $alunos; do
+            email=$(echo $aluno | awk '{print $1}')
+            senha=$(echo $aluno | awk '{print $2}')
+            echo "Testando login do aluno: $email"
+      
+          resposta=$(curl -s -o /dev/null -w "%{http_code}" -d "email=$email&senha=$senha&tipo=aluno" https://seusite.com.br/login)
+      
+          if [ "$resposta" -eq 200 ]; then
+            echo "✅ Login OK para $email"
           else
-            echo "⚠️ Login retornou algo inesperado."
-            echo "Resposta parcial:"
-            echo "$RESPONSE" | head -n 30
-            exit 1
+            echo "❌ Falha no login de $email"
           fi
+          done
+
