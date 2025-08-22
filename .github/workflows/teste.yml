@@ -59,9 +59,12 @@ jobs:
             senha=$(echo "$linha" | awk '{print $2}')
             echo "Testando login do aluno: $email"
 
-            resposta=$(curl -s -o /dev/null -w "%{http_code}" -d "email=$email&senha=$senha&tipo=aluno" magenta-jay-944565.hostingersite.com)
+            # Faz login e segue redirecionamentos
+            pagina_final=$(curl -s -L -d "email=$email&senha=$senha&tipo=aluno" \
+              -w "%{url_effective}" -o /dev/null \
+              https://magenta-jay-944565.hostingersite.com/)
 
-            if [ "$resposta" -eq 200 ]; then
+            if [[ "$pagina_final" == *"inicioAluno.php"* ]]; then
               echo "✅ Login OK para $email"
             else
               echo "❌ Falha no login de $email"
