@@ -45,16 +45,24 @@ jobs:
       - name: Testar logins de todos os alunos
         run: |
           echo "Pegando todos os alunos do banco..."
-          mysql -h srv720.hstgr.io -P 3306 -u u357936358_librinha -p"Librinh4tcc#" u357936358_scanhands -N -e "SELECT email, senha FROM usuario WHERE tipo='aluno';" | \
-          while IFS=$'\t' read -r email senha; do
+          # Captura o resultado do MySQL em linhas, sem coluna de cabeçalho
+          mapfile -t alunos < <(mysql -h srv720.hstgr.io -P 3306 -u u357936358_librinha -p"Librinh4tcc#" \
+            --batch --skip-column-names \
+            -e "SELECT email, senha FROM usuario WHERE tipo='aluno';" u357936358_scanhands)
+
+          for linha in "${alunos[@]}"; do
+            email=$(echo "$linha" | awk '{print $1}')
+            senha=$(echo "$linha" | awk '{print $2}')
             echo "Testando login do aluno: $email"
+
             resposta=$(curl -s -o /dev/null -w "%{http_code}" -d "email=$email&senha=$senha&tipo=aluno" https://seusite.com.br/login)
-      
+
             if [ "$resposta" -eq 200 ]; then
               echo "✅ Login OK para $email"
             else
               echo "❌ Falha no login de $email"
             fi
           done
+
 
 
