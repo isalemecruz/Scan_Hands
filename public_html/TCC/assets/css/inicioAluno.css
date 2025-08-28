@@ -1,0 +1,225 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+}
+
+body {
+    display: flex;
+    height: 100vh;
+    background-color: #f0f0f0;
+}
+
+.sidebar {
+    width: 320px;
+    background: #ffffff;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    transition: width 0.3s;
+}
+
+.sidebar.collapsed {
+    width: 110px;
+}
+
+.sidebar-top {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#toggleSidebar {
+    align-self: flex-end;
+    margin-bottom: 10px;
+    background-color: transparent;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.sidebar img {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    margin-bottom: 10px;
+    background: #ccc;
+}
+
+.sidebar .email {
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.sidebar button {
+    background-color: #3d68b2;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 30px;
+}
+
+.sidebar nav {
+    width: 100%;
+}
+
+.sidebar nav a {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    color: black;
+    text-decoration: none;
+    gap: 10px;
+}
+
+.sidebar nav a img {
+    width: 40px;
+    height: 40px;
+}
+
+.sidebar nav a:hover {
+    background-color: #f0f0f0;
+}
+
+.sidebar nav a span {
+    display: inline;
+}
+
+.logout {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: black;
+    text-decoration: none;
+}
+
+.logout span {
+    display: inline;
+}
+
+/* Esconde os textos na sidebar colapsada */
+.sidebar.collapsed .sidebar-top button:not(#toggleSidebar),
+.sidebar.collapsed .email,
+.sidebar.collapsed nav a span,
+.sidebar.collapsed .logout span,
+.sidebar.collapsed button:not(#toggleSidebar) {
+    display: none;
+}
+
+.sidebar.collapsed nav a,
+.sidebar.collapsed .logout {
+    justify-content: center;
+}
+
+.main {
+    flex: 1;
+    padding: 0 60px;
+}
+
+.welcome {
+    background-color: #3d68b2;
+    color: white;
+    padding: 40px 20px;
+    border-radius: 20px;
+    font-size: 34px;
+    font-weight: bolder;
+    width: 80%px;
+    margin-top: -20px;
+    margin-bottom: 20px;
+}
+
+.cards-wrapper {
+    background-color: white;
+    border-radius: 30px;
+    padding: 20px 40px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    margin: 0 auto;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* 2 cards por linha */
+    grid-template-rows: repeat(2, auto);
+    /* 2 linhas automáticas */
+    gap: 30px;
+    /* espaçamento entre eles */
+}
+
+.card {
+    background-color: #4a73c3;
+    color: white;
+    border-radius: 25px;
+    padding: 40px 40px;
+    /* aumentei o preenchimento interno */
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+    height: 250px;
+    /* aumentei a altura */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    flex: 1 1 300px;
+    /* mínimo maior */
+}
+
+.card p {
+    font-weight: 700;
+    font-size: 1.15rem;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.progress-bar {
+    height: 3px;
+    background-color: white;
+    border-radius: 3px;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.progress-text {
+    font-size: 12px;
+    text-align: right;
+    font-weight: 600;
+    opacity: 0.8;
+}
+
+.sidebar.collapsed #toggleIcon {
+    transform: rotate(180deg);
+    transition: transform 0.3s;
+}
+
+#toggleIcon {
+    transition: transform 0.3s;
+}
+
+#toggleSidebar {
+    align-self: flex-end;
+    margin-bottom: 10px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    outline: none;
+}
+
+#toggleSidebar:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+#toggleSidebar:hover img {
+    opacity: 0.8;
+}
