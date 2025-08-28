@@ -1,0 +1,24 @@
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: ["Teste PHP, Login e Banco"]
+    types:
+      - completed
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      - name: Instalar PHP
+        run: sudo apt-get install -y php-cli php-curl php-mbstring
+
+      - name: Rodar deploy
+        run: |
+          echo "Simulando deploy..."
+          php -r 'echo "Deploy executado com sucesso!\n";'
