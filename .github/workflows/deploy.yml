@@ -14,23 +14,24 @@ jobs:
     steps:
       - name: Checkout do código
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }} # garante permissão
 
       - name: Instalar PHP
         run: sudo apt-get install -y php-cli php-curl php-mbstring
 
-      - name: Criar pasta de logs e salvar arquivo
+      - name: Criar logs
         run: |
           mkdir -p public_html/logs
-          echo "Deploy executado com sucesso em $(date)" > public_html/logs/deploy.txt
-      
+          echo "Deploy executado em $(date)" >> public_html/logs/deploy.txt
+
       - name: Commit e Push dos logs
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add public_html/logs/
-          git commit -m "Adiciona logs de deploy"
+          git add public_html/logs/deploy.txt
+          git commit -m "Adiciona logs de deploy" || echo "Nada a commitar"
           git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       
       
