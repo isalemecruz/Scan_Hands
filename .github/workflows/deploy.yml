@@ -22,3 +22,8 @@ jobs:
         run: |
           echo "Simulando deploy..."
           php -r 'echo "Deploy executado com sucesso!\n";'
+
+      - name: Gerar log de deploy
+        run: |
+          mkdir -p Scan_Hands/public_html/logs
+          echo "Deploy executado em $(date)" >> Scan_Hands/public_html/logs/deploy_log.txt
