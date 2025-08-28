@@ -18,12 +18,19 @@ jobs:
       - name: Instalar PHP
         run: sudo apt-get install -y php-cli php-curl php-mbstring
 
-      - name: Rodar deploy
+      - name: Criar pasta de logs e salvar arquivo
         run: |
-          echo "Simulando deploy..."
-          php -r 'echo "Deploy executado com sucesso!\n";'
-
-      - name: Gerar log de deploy
+          mkdir -p public_html/logs
+          echo "Deploy executado com sucesso em $(date)" > public_html/logs/deploy.txt
+      
+      - name: Commit e Push dos logs
         run: |
-          mkdir -p Scan_Hands/public_html/logs
-          echo "Deploy executado em $(date)" >> Scan_Hands/public_html/logs/deploy_log.txt
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add public_html/logs/
+          git commit -m "Adiciona logs de deploy"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      
