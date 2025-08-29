@@ -32,6 +32,3 @@ jobs:
           git add public_html/logs/deploy.txt
           git commit -m "Adiciona logs de deploy" || echo "Nada a commitar"
           git push
-
-      
-      
