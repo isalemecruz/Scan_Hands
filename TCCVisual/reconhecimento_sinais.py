@@ -2,23 +2,30 @@ import cv2
 import numpy as np
 import tensorflow as tf
 
-# Carregar o modelo TFLite
+
 interpreter = tf.lite.Interpreter(model_path="model.tflite")
 interpreter.allocate_tensors()
 
 input_details = interpreter.get_input_details()
 output_details = interpreter.get_output_details()
 
-# Inicializar a câmera
+
 cap = cv2.VideoCapture(0)
 
-# Verifica a câmera 
+
 if not cap.isOpened():
     print("Erro ao abrir a câmera!")
     exit()
 
+
+labels = [
+    "A","B","C","D","E","F","G","H","I","J",
+    "K","L","M","N","O","P","Q","R","S","T",
+    "U","V","W","X","Y"
+]
+
 while True:
-    # Captura o frame da câmera
+
     ret, frame = cap.read()
     if not ret:
         print("Falha ao capturar o frame!")
@@ -32,64 +39,25 @@ while True:
     interpreter.set_tensor(input_details[0]['index'], input_data)
     interpreter.invoke()
 
-    output_data = interpreter.get_tensor(output_details[0]['index'])
+  
+    output_data = interpreter.get_tensor(output_details[0]['index'])[0]
+
+  
     prediction = np.argmax(output_data)
 
-    if prediction == 0:
-        letter = "A"
-    elif prediction == 1:
-        letter = "B"
-    elif prediction == 2:
-        letter = "C"
-    elif prediction == 3:
-        letter = "D"
-    elif prediction == 4:
-        letter = "E"
-    elif prediction == 5:
-        letter = "F"
-    elif prediction == 6:
-        letter = "G"
-    elif prediction == 7:
-        letter = "H"
-    elif prediction == 8:
-        letter = "I"
-    elif prediction == 9:
-        letter = "J"
-    elif prediction == 10:
-        letter = "K"
-    elif prediction == 11:
-        letter = "L"
-    elif prediction == 12:
-        letter = "M"
-    elif prediction == 13:
-        letter = "N"
-    elif prediction == 14:
-        letter = "O"
-    elif prediction == 15:
-        letter = "P"
-    elif prediction == 16:
-        letter = "Q"
-    elif prediction == 17:
-        letter = "R"
-    elif prediction == 18:
-        letter = "S"
-    elif prediction == 19:
-        letter = "T"
-    elif prediction == 20:
-        letter = "U"
-    elif prediction == 21:
-        letter = "V"
-    elif prediction == 22:
-        letter = "W"
-    elif prediction == 23:
-        letter = "X"
-    elif prediction == 24:
-        letter = "Y"
+   
+    confidence = output_data[prediction] * 100  
+
+   
+    if prediction < len(labels):
+        letter = labels[prediction]
     else:
         letter = "?"
 
-    cv2.putText(frame, f"Letra prevista: {letter}", (10, 30),
-                cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+ 
+    cv2.putText(frame, f"Letra: {letter} ({confidence:.2f}%)", 
+                (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 
+                1, (0, 255, 0), 2)
 
     cv2.imshow("Reconhecimento de Sinais", frame)
 
